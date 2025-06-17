@@ -101,9 +101,9 @@ $btn_name = isset($_REQUEST['edit_product_id']) ? "Update" : "Add";
                     </button>
                     <button type="button" class="btn btn-danger btn-sm " style="display: none;" id="cancelCategoryBtn">Cancel</button>
                   </div>
-                  <div class="col-sm-2 mt-3 mb-sm-0">
+                  <div class="col-sm-2  mb-sm-0">
                     <label for=""> Rate</label>
-                    <input type="text" class="form-control" id="current_rate" placeholder=" Rate" name="current_rate" required value="<?= @$fetchproduct['current_rate'] ?>">
+                    <input type="text" class="form-control" id="purchase_rate" placeholder=" Rate" name="purchase_rate" required value="<?= @$fetchproduct['purchase_rate'] ?>">
                   </div>
                   <div class="col-sm-3 mt-3">
                     <label for="">Product Alert on Quantity</label>

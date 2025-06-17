@@ -75,8 +75,6 @@
 				$q = mysqli_query($dbc,"SELECT * FROM budget WHERE (budget_date BETWEEN '$f_date' AND '$t_date') AND budget_type = 'income' "); ?>
 				<?php while($r=mysqli_fetch_assoc($q)):
 
-					
-
 					?>
 
 				<tr>

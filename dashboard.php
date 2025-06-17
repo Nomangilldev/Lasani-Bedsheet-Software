@@ -60,7 +60,7 @@ if (isset($_REQUEST['orderdate']) && $_REQUEST['orderdate'] !== '') {
     }
 } elseif (isset($_REQUEST['start_date']) && $_REQUEST['start_date'] !== '' && empty($_REQUEST['end_date'])) {
 
-    $start_date =  $_REQUEST['start_date'];
+    $start_date = $_REQUEST['start_date'];
 
     $date_select = "AND DATE_FORMAT(timestamp, '%Y-%m-%d') = '$start_date'";
 } elseif (isset($_REQUEST['start_date']) && $_REQUEST['start_date'] !== '' && isset($_REQUEST['end_date'])) {
@@ -78,7 +78,7 @@ if (isset($_REQUEST['orderdate']) && $_REQUEST['orderdate'] !== '') {
 $salesGet = mysqli_query($dbc, "SELECT * FROM orders WHERE 1=1 $date_select ");
 $total_profit = 0;
 while ($fetchOrder = mysqli_fetch_assoc($salesGet)): ?>
-<?php
+    <?php
     $sql = "SELECT * FROM order_item WHERE order_id = '$fetchOrder[order_id]' AND order_item_status=1";
     $query = $dbc->query($sql);
     while ($result = $query->fetch_assoc()) {
@@ -117,7 +117,8 @@ endwhile;
                     <div class="col-12">
                         <div class="row align-items-center mb-2">
                             <div class="col-4 d-flex align-items-center ">
-                                <button type="button" class="btn btn-primary  filter_btn" data-toggle="modal" data-target="#modalCookie1"><i class="fa fa-filter"></i></button>
+                                <button type="button" class="btn btn-primary  filter_btn" data-toggle="modal"
+                                    data-target="#modalCookie1"><i class="fa fa-filter"></i></button>
                             </div>
                             <div class="col-8 justify-content-end d-flex align-items-center">
                                 <div class="w-75 justify-content-end d-flex align-items-center">
@@ -169,7 +170,7 @@ endwhile;
                         <!-- row start-->
                         <div class="row">
 
-                            <div class="col-md-4 col-12 mb-4">
+                            <div class="col-md-3 col-12 mb-4">
                                 <div class="card shadow bg-primary text-white border-0">
                                     <div class="card-body">
                                         <div class="row align-items-center">
@@ -194,7 +195,7 @@ endwhile;
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-12 mb-4">
+                            <div class="col-md-3 col-12 mb-4">
                                 <div class="card shadow bg-primary text-white border-0">
                                     <div class="card-body">
                                         <div class="row align-items-center">
@@ -217,7 +218,7 @@ endwhile;
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-12 mb-4">
+                            <div class="col-md-3 col-12 mb-4">
                                 <div class="card shadow bg-primary text-white border-0">
                                     <div class="card-body">
                                         <div class="row align-items-center">
@@ -232,8 +233,38 @@ endwhile;
                                                     <span class="h3 mb-0 text-white">
                                                         <?php
 
-                                                        echo  number_format($total_profit);
+
+                                                        if ($UserData['user_role'] == 'admin') {
+                                                            echo number_format($total_profit);
+                                                        } else {
+                                                            echo "0";
+                                                        }
                                                         ?>
+                                                    </span>
+                                                </span>
+                                                <!--   <span class="small text-white">+5.5%</span> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-12 mb-4">
+                                <div class="card shadow bg-primary text-white border-0">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col-3 text-center">
+                                                <span class="circle circle-sm bg-white">
+                                                    <i class="fe fe-16 fe-shopping-bag text-default mb-0"></i>
+                                                </span>
+                                            </div>
+                                            <div class="col pr-0">
+                                                <p class="small text-white mb-0">Today Expense</p>
+                                                <span class="h3 mb-0 text-white">
+                                                    <span class="h3 mb-0 text-white">
+                                                         <?php
+                                                    @$total_expense = mysqli_fetch_assoc(mysqli_query($dbc, "SELECT sum(voucher_amount) as total_expense , timestamp FROM vouchers where 1=1 && voucher_group = 'expense_voucher' $date_select "))['total_expense'];
+                                                    echo $total_expense2 = isset($total_expense) ? $total_expense : "0";
+                                                    ?>
                                                     </span>
                                                 </span>
                                                 <!--   <span class="small text-white">+5.5%</span> -->
@@ -307,7 +338,7 @@ endwhile;
                         <div class="row">
 
 
-                            <div class="col-md-6 col-12 mb-4">
+                            <div class="col-md-3 col-12 mb-4">
                                 <div class="card bg-primary shadow border-0">
                                     <div class="card-body">
                                         <div class="row align-items-center">
@@ -331,7 +362,7 @@ endwhile;
     "))['total_purchases'];
                                                     $total_purchases = isset($total_purchases) ? $total_purchases : 0;
 
-                                                    echo  number_format($total_purchases);
+                                                    echo number_format($total_purchases);
                                                     ?>
                                                 </span>
                                             </div>
@@ -339,7 +370,7 @@ endwhile;
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-12 mb-4">
+                            <div class="col-md-3 col-12 mb-4">
                                 <div class="card bg-primary shadow border-0">
                                     <div class="card-body">
                                         <div class="row align-items-center">
@@ -454,6 +485,84 @@ endwhile;
                                 </div>
                             </div> -->
 
+                        
+
+
+                            <div class="col-md-3 col-12 mb-4">
+                                <div class="card bg-primary shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col-3 text-center">
+                                                <span class="circle circle-sm bg-white">
+                                                    <i class="fe fe-16 fe-shopping-cart text-default mb-0"></i>
+                                                </span>
+                                            </div>
+                                            <div class="col pr-0 text-white">
+                                                <p class="small  mb-0">Today Purchase Returns
+                                                    <span class="px-2 " style="font-size: 18px; font-weight: 600">
+                                                        <?php
+                                                        @$total_purchase_returns = mysqli_fetch_assoc(mysqli_query($dbc, "
+        SELECT 
+            COUNT(*) AS total_purchase_returns
+        FROM 
+            purchase_return    
+        WHERE 
+            1=1 $date_select 
+    "))['total_purchase_returns'];
+                                                        $total_purchase_returns = isset($total_purchase_returns) ? $total_purchase_returns : 0;
+
+                                                        echo number_format($total_purchase_returns); ?>
+                                                    </span>
+                                                </p>
+                                                <span class="h3 mb-0 text-white">
+                                                    <?php
+                                                    @$total_purchase_returns2 = mysqli_fetch_assoc(mysqli_query($dbc, "SELECT sum(grand_total) as total_purchase_returns , timestamp FROM purchase_return where 1=1 $date_select "))['total_purchase_returns'];
+                                                    echo $total_purchase_returns2 = isset($total_purchase_returns2) ? $total_purchase_returns2 : "0";
+                                                    ?>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-12 mb-4">
+                                <div class="card bg-primary shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col-3 text-center">
+                                                <span class="circle circle-sm bg-white">
+                                                    <i class="fe fe-16 fe-shopping-cart text-default mb-0"></i>
+                                                </span>
+                                            </div>
+                                            <div class="col pr-0 text-white">
+                                                <p class="small  mb-0">Today Sale Returns <span class="px-2 "
+                                                        style="font-size: 18px; font-weight: 600">
+                                                        <?php
+                                                        @$total_sale_returns = mysqli_fetch_assoc(mysqli_query($dbc, "
+        SELECT 
+            COUNT(*) AS total_sale_returns
+        FROM 
+            orders_return    
+        WHERE 
+            1=1 $date_select 
+    "))['total_sale_returns'];
+                                                        $total_sale_returns = isset($total_sale_returns) ? $total_sale_returns : 0;
+
+                                                        echo number_format($total_sale_returns); ?>
+                                                    </span>
+                                                </p>
+                                                <span class="h3 mb-0 text-white">
+                                                    <?php
+                                                    @$total_sale_returns2 = mysqli_fetch_assoc(mysqli_query($dbc, "SELECT sum(grand_total) as total_sale_returns , timestamp FROM orders_return where 1=1 $date_select "))['total_sale_returns'];
+                                                    echo $total_sale_returns2 = isset($total_sale_returns2) ? $total_sale_returns2 : "0";
+                                                    ?>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div><!-- Second row end  -->
                         <div class="row">
                             <div class="col-md-6">
@@ -477,18 +586,24 @@ endwhile;
                                             </div>
                                             <div class="col-6 text-center mb-3">
                                                 <p class="text-muted mb-1">Yesterday</p>
-                                                <h6 class="mb-1"><?= getOrders($dbc, "WHERE 1=1 $date_select ", "grand_total") ?></h6>
+                                                <h6 class="mb-1">
+                                                    <?= getOrders($dbc, "WHERE 1=1 $date_select ", "grand_total") ?>
+                                                </h6>
                                                 <p class="text-muted"></p>
                                             </div>
 
                                             <div class="col-6 text-center border-right">
                                                 <p class="text-muted mb-1">This Week</p>
-                                                <h6 class="mb-1"><?= getOrders($dbc, "WHERE 1=1 $date_select  ", "grand_total") ?></h6>
+                                                <h6 class="mb-1">
+                                                    <?= getOrders($dbc, "WHERE 1=1 $date_select  ", "grand_total") ?>
+                                                </h6>
                                                 <p class="text-muted mb-2"></p>
                                             </div>
                                             <div class="col-6 text-center">
                                                 <p class="text-muted mb-1">Last Week</p>
-                                                <h6 class="mb-1"><?= getOrders($dbc, "WHERE 1=1 $date_select  ", "grand_total") ?></h6>
+                                                <h6 class="mb-1">
+                                                    <?= getOrders($dbc, "WHERE 1=1 $date_select  ", "grand_total") ?>
+                                                </h6>
                                                 <p class="text-muted"></p>
                                             </div>
                                         </div>
@@ -516,26 +631,44 @@ endwhile;
                                             <tbody>
                                                 <?php
                                                 // Query to get today's orders along with profit
-                                                $query = "
-            SELECT 
-                ord.bill_no AS bill_no,
-                ord.grand_total,
-                COALESCE(SUM((oi.rate - pi.rate) * oi.quantity), 0) AS profit
-            FROM 
-                orders ord
-            LEFT JOIN 
-                order_item oi ON ord.order_id = oi.order_id
-            LEFT JOIN 
-                purchase_item pi ON oi.product_id = pi.product_id
-            WHERE 
-                1=1 $date_select 
-            GROUP BY 
-                ord.order_id
-        ";
+        //                                         $query = "
+        //     SELECT 
+        //         ord.bill_no AS bill_no,
+        //         ord.grand_total,
+        //         COALESCE(SUM((oi.rate - pi.rate) * oi.quantity), 0) AS profit
+        //     FROM 
+        //         orders ord
+        //     LEFT JOIN 
+        //         order_item oi ON ord.order_id = oi.order_id
+        //     LEFT JOIN 
+        //         purchase_item pi ON oi.product_id = pi.product_id
+        //     WHERE 
+        //         1=1 $date_select 
+        //     GROUP BY 
+        //         ord.order_id
+        // ";
 
+                                                  $query ="SELECT 
+    ord.bill_no AS bill_no,
+    ord.grand_total,
+    COALESCE(SUM((oi.rate - pi.rate) * oi.quantity), 0) AS profit
+FROM 
+    orders ord
+LEFT JOIN 
+    order_item oi ON ord.order_id = oi.order_id
+LEFT JOIN (
+    SELECT product_id, AVG(rate) AS rate
+    FROM purchase_item
+    GROUP BY product_id
+) pi ON oi.product_id = pi.product_id
+WHERE 
+    1=1 $date_select 
+GROUP BY 
+    ord.order_id"
+;
                                                 $result = mysqli_query($dbc, $query);
                                                 $serial_number = 1; // Start serial number from 1
-
+                                                
                                                 while ($row = mysqli_fetch_assoc($result)) {
                                                     $bill_no = $row['bill_no'];
                                                     $grand_total = number_format($row['grand_total']);
@@ -631,7 +764,8 @@ endwhile;
 
                     </div> <!-- .container-fluid -->
 
-                    <div class="modal fade modal-shortcut modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
+                    <div class="modal fade modal-shortcut modal-slide" tabindex="-1" role="dialog"
+                        aria-labelledby="defaultModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -692,7 +826,8 @@ endwhile;
 
 
     <!--Modal: modalCookie-->
-    <div class="modal fade top" id="modalCookie1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="true">
+    <div class="modal fade top" id="modalCookie1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" data-backdrop="true">
         <div class="modal-dialog modal-frame modal-lg modal-top modal-notify modal-info" role="document">
             <!--Content-->
             <div class="modal-content">
@@ -722,12 +857,15 @@ endwhile;
                                     <option value="lastmonth">Last Month</option>
                                 </select>
                             </div>
-                            <div class=" py-3 d-flex align-items-end justify-content-end col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <div
+                                class=" py-3 d-flex align-items-end justify-content-end col-md-12 col-sm-12 col-lg-12 col-xl-12">
                                 <div>
-                                    <input class=" btn btn-success text-white waves-effect" type="submit" name="saleByDate" value="Filter Sale">
+                                    <input class=" btn btn-success text-white waves-effect" type="submit"
+                                        name="saleByDate" value="Filter Sale">
                                 </div>
                                 <div>
-                                    <a type="button" class="mx-2 btn btn-danger text-white waves-effect" data-dismiss="modal">Cancel</a>
+                                    <a type="button" class="mx-2 btn btn-danger text-white waves-effect"
+                                        data-dismiss="modal">Cancel</a>
                                 </div>
                             </div>
                         </div>
@@ -771,11 +909,11 @@ endwhile;
     <script src='js/uppy.min.js'></script>
     <script src='js/quill.min.js'></script>
     <script>
-        $(document).ready(function() {
-            $(".filter_btn").hover(function() {
+        $(document).ready(function () {
+            $(".filter_btn").hover(function () {
                 // Add "Filter by Date" text and icon
                 $(this).html('<i class="fa fa-filter"></i> Filter By Date');
-            }, function() {
+            }, function () {
                 // Remove text when mouse out
                 $(this).html('<i class="fa fa-filter"></i>');
             });
@@ -868,42 +1006,42 @@ endwhile;
                 ['bold', 'italic', 'underline', 'strike'],
                 ['blockquote', 'code-block'],
                 [{
-                        'header': 1
-                    },
-                    {
-                        'header': 2
-                    }
+                    'header': 1
+                },
+                {
+                    'header': 2
+                }
                 ],
                 [{
-                        'list': 'ordered'
-                    },
-                    {
-                        'list': 'bullet'
-                    }
+                    'list': 'ordered'
+                },
+                {
+                    'list': 'bullet'
+                }
                 ],
                 [{
-                        'script': 'sub'
-                    },
-                    {
-                        'script': 'super'
-                    }
+                    'script': 'sub'
+                },
+                {
+                    'script': 'super'
+                }
                 ],
                 [{
-                        'indent': '-1'
-                    },
-                    {
-                        'indent': '+1'
-                    }
+                    'indent': '-1'
+                },
+                {
+                    'indent': '+1'
+                }
                 ], // outdent/indent
                 [{
                     'direction': 'rtl'
                 }], // text direction
                 [{
-                        'color': []
-                    },
-                    {
-                        'background': []
-                    }
+                    'color': []
+                },
+                {
+                    'background': []
+                }
                 ], // dropdown with defaults from theme
                 [{
                     'align': []
@@ -918,14 +1056,14 @@ endwhile;
             });
         }
         // Example starter JavaScript for disabling form submissions if there are invalid fields
-        (function() {
+        (function () {
             'use strict';
-            window.addEventListener('load', function() {
+            window.addEventListener('load', function () {
                 // Fetch all the forms we want to apply custom Bootstrap validation styles to
                 var forms = document.getElementsByClassName('needs-validation');
                 // Loop over them and prevent submission
-                var validation = Array.prototype.filter.call(forms, function(form) {
-                    form.addEventListener('submit', function(event) {
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
                         if (form.checkValidity() === false) {
                             event.preventDefault();
                             event.stopPropagation();
@@ -955,8 +1093,8 @@ endwhile;
             });
         }
 
-        $(document).ready(function() {
-            $("#refresh").on('click', function() {
+        $(document).ready(function () {
+            $("#refresh").on('click', function () {
                 location.reload();
             })
         });

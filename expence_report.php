@@ -98,7 +98,7 @@
 			}elseif(empty($f_date)){
 
 				$q = mysqli_query($dbc,"SELECT * FROM vouchers WHERE voucher_group = 'expense_voucher'  AND customer_id2 = '$exp_cat' ");
-				echo "SELECT * FROM vouchers WHERE voucher_group = 'expense_voucher'  AND customer_id2 = '$exp_cat' OR (voucher_date BETWEEN '$f_date' AND '$t_date')";
+				// echo "SELECT * FROM vouchers WHERE voucher_group = 'expense_voucher'  AND customer_id2 = '$exp_cat' OR (voucher_date BETWEEN '$f_date' AND '$t_date')";
 
 			}else{
 				$q = mysqli_query($dbc,"SELECT * FROM vouchers WHERE voucher_group = 'expense_voucher'  AND customer_id2 = '$exp_cat' AND (voucher_date BETWEEN '$f_date' AND '$t_date')");
@@ -114,7 +114,7 @@
 				<tr>
 					<td><?=$i?></td>
 					<td><?=date('D, d-M-Y',strtotime($r['voucher_date']))?></td>
-					<td><?= $cust_info['customer_name']?></td>
+					<td><?= @$cust_info['customer_name']?></td>
 					<td><?= $r['voucher_amount']?></td>
 					<td><?=$cust_info1['customer_name']?></td>
 					
@@ -123,7 +123,7 @@
 					
 				</tr>
 			<?php $i++;
-			$gtotal += $r['voucher_amount'];
+			$gtotal += @$r['voucher_amount'];
 			endwhile; ?>
 			</tbody>
 			<tfoot>

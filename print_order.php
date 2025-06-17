@@ -1,10 +1,9 @@
 <?php include_once 'includes/head.php';
-if ($_REQUEST['type'] == "purchase") {
+if ($_REQUEST['type'] == "purchase" || $_REQUEST['type'] == "purchase_return") {
     $print = 1;
 } else {
     $print = 2;
 }
-
 for ($i = 0; $i < $print; $i++) {
     if ($i > 0) {
         $margin = "margin-top:-270px !important";
@@ -15,30 +14,78 @@ for ($i = 0; $i < $print; $i++) {
     }
 
     if ($_REQUEST['type'] == "purchase") {
-        $nameSHow = 'Supplier';
-        $order = fetchRecord($dbc, "purchase", "purchase_id", $_REQUEST['id']);
-        if ($order['payment_type'] == "credit_purchase") {
-
-            $order_type = "credit purchase";
-        } else {
-            $order_type = "cash purchase";
-        }
-        $order_item = mysqli_query($dbc, "SELECT purchase_item.*,product.* FROM purchase_item INNER JOIN product ON purchase_item.product_id=product.product_id WHERE purchase_item.purchase_id='" . $_REQUEST['id'] . "'");
+    $nameSHow = 'Supplier';
+    $order = fetchRecord($dbc, "purchase", "purchase_id", $_REQUEST['id']);
+    
+    if ($order['payment_type'] == "credit_purchase") {
+        $order_type = "credit purchase";
     } else {
-        $nameSHow = 'Customer';
-        $order = fetchRecord($dbc, "orders", "order_id", $_REQUEST['id']);
-
-        $order_item = mysqli_query($dbc, "SELECT order_item.*,product.* FROM order_item INNER JOIN product ON order_item.product_id=product.product_id WHERE order_item.order_id='" . $_REQUEST['id'] . "'");
-        if ($order['payment_type'] == "credit_sale") {
-            if ($order['payment_type'] == "none") {
-                $order_type = "credit sale";
-            } else {
-                $order_type = $order['credit_sale_type'];
-            }
-        } else {
-            $order_type = "cash sale";
-        }
+        $order_type = "cash purchase";
     }
+
+    $order_item = mysqli_query($dbc, "
+        SELECT purchase_item.*, product.* 
+        FROM purchase_item 
+        INNER JOIN product ON purchase_item.product_id = product.product_id 
+        WHERE purchase_item.purchase_id = '" . $_REQUEST['id'] . "'
+    ");
+
+} elseif ($_REQUEST['type'] == "purchase_return") {
+    $nameSHow = 'Supplier';
+    $order = fetchRecord($dbc, "purchase_return", "purchase_id", $_REQUEST['id']);
+    
+    if ($order['payment_type'] == "credit_purchase") {
+        $order_type = "credit purchase";
+    } else {
+        $order_type = "cash purchase";
+    }
+
+    $order_item = mysqli_query($dbc, "
+        SELECT purchase_return_item.*, product.* 
+        FROM purchase_return_item 
+        INNER JOIN product ON purchase_return_item.product_id = product.product_id 
+        WHERE purchase_return_item.purchase_id = '" . $_REQUEST['id'] . "'
+    ");
+}
+ else if ($_REQUEST['type'] == "order_return") {
+    $nameSHow = 'Customer';
+    $order = fetchRecord($dbc, "orders_return", "order_id", $_REQUEST['id']);
+    
+    $order_item = mysqli_query($dbc, "
+        SELECT order_return_item.*, product.* 
+        FROM order_return_item 
+        INNER JOIN product ON order_return_item.product_id = product.product_id 
+        WHERE order_return_item.order_id = '" . $_REQUEST['id'] . "'
+    ");
+
+    if ($order['payment_type'] == "credit") {
+        $order_type = "credit sale return";
+    } else {
+        $order_type = "cash sale return";
+    }
+
+}
+ else {
+    $nameSHow = 'Customer';
+    $order = fetchRecord($dbc, "orders", "order_id", $_REQUEST['id']);
+
+    $order_item = mysqli_query($dbc, "
+        SELECT order_item.*, product.* 
+        FROM order_item 
+        INNER JOIN product ON order_item.product_id = product.product_id 
+        WHERE order_item.order_id = '" . $_REQUEST['id'] . "'
+    ");
+
+    if ($order['payment_type'] == "credit_sale") {
+        if ($order['payment_type'] == "none") {
+            $order_type = "credit sale";
+        } else {
+            $order_type = $order['credit_sale_type'];
+        }
+    } else {
+        $order_type = "cash sale";
+    }
+}
 
 ?>
     <style type="text/css">
@@ -69,6 +116,7 @@ for ($i = 0; $i < $print; $i++) {
             font-family: 'Lucida Casual', 'Comic Sans MS';
 
         }
+        
     </style>
 
     <div class="page-content-wrapper">
@@ -116,7 +164,7 @@ for ($i = 0; $i < $print; $i++) {
 
                                 <?php if ($_REQUEST['type'] == "order" and $order['payment_type'] == "credit_sale") { ?>
 
-                                style="min-height:1250px;background-color: blue;"
+                                style="min-height:620px;"
                                 <?php
                                 } else {
                                 ?>
@@ -417,7 +465,7 @@ for ($i = 0; $i < $print; $i++) {
         }
 
         .invoice table tfoot td {
-            background: 0 0;
+            background: ;
             border-bottom: none;
             white-space: nowrap;
             text-align: right;

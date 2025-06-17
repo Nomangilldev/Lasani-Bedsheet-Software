@@ -374,10 +374,10 @@
 
                           <?php
                           $open_b = mysqli_fetch_assoc(mysqli_query($dbc, $opening_sql));
-                          if ($open_b['debit'] == 0) {
-                            $opening_balance = (int)$open_b['credit'];
+                          if (@$open_b['debit'] == 0) {
+                            $opening_balance = (int)@$open_b['credit'];
                           } else {
-                            $opening_balance = (int)$open_b['debit'];
+                            $opening_balance = (int)@$open_b['debit'];
                           }
 
 

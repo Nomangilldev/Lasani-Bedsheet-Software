@@ -90,7 +90,8 @@
 
 
                   <button class="mt-2 btn btn-admin float-right" name="genealledger" type="submit">Search</button>
-                  <button class="mt-2 btn btn-admin2 float-right" onclick="window.print();" style="margin-right: 15px;">Print Report</button>
+                  <button class="mt-2 btn btn-admin2 float-right" onclick="window.print();"
+                    style="margin-right: 15px;">Print Report</button>
 
 
                 </div><!-- group -->
@@ -126,6 +127,9 @@
               $cash_in_hand_sale = mysqli_fetch_array(mysqli_query($dbc, "SELECT count(*) as cash_in_hand,sum(grand_total) as cash_in_hand_amount FROM orders WHERE order_date BETWEEN '" . $_REQUEST['from_date'] . "' AND '" . $_REQUEST['to_date'] . "' AND payment_type='cash_in_hand' "));
 
               $credit_sale = mysqli_fetch_array(mysqli_query($dbc, "SELECT count(*) as credit_sale,sum(grand_total) as credit_sale_amount FROM orders WHERE order_date BETWEEN '" . $_REQUEST['from_date'] . "' AND '" . $_REQUEST['to_date'] . "' AND payment_type='credit_sale' "));
+              $supplier_due = mysqli_fetch_assoc(mysqli_query($dbc, "SELECT SUM(debit - credit) AS balance FROM transactions t JOIN customers c ON c.customer_id = t.customer_id WHERE c.customer_type = 'supplier' AND t.transaction_date BETWEEN '" . $_REQUEST['from_date'] . "' AND '" . $_REQUEST['to_date'] . "' "));
+              $customer_due = mysqli_fetch_assoc(mysqli_query($dbc, "SELECT SUM(credit - debit) AS balance FROM transactions t JOIN customers c ON c.customer_id = t.customer_id WHERE c.customer_type = 'customer' AND t.transaction_date BETWEEN '" . $_REQUEST['from_date'] . "' AND '" . $_REQUEST['to_date'] . "' "));
+              $product_stock = mysqli_fetch_assoc(mysqli_query($dbc, "SELECT SUM(quantity_instock) AS total_stock ,SUM(quantity_instock * purchase_rate) AS total_inventory_amount FROM product WHERE adddatetime BETWEEN '" . $_REQUEST['from_date'] . "' AND '" . $_REQUEST['to_date'] . "'"));
             } else if (!empty($_REQUEST['from_date']) and empty($_REQUEST['to_date'])) {
               $sales = mysqli_fetch_array(mysqli_query($dbc, "SELECT count(*) as total_order,order_id,sum(grand_total) as total_sales FROM orders WHERE order_date = '" . $_REQUEST['from_date'] . "' "));
               $salesGet = mysqli_query($dbc, "SELECT * FROM orders  WHERE order_date = '" . $_REQUEST['from_date'] . "' ");
@@ -141,6 +145,9 @@
               $cash_in_hand_sale = mysqli_fetch_array(mysqli_query($dbc, "SELECT count(*) as cash_in_hand,sum(grand_total) as cash_in_hand_amount FROM orders WHERE order_date='" . $_REQUEST['from_date'] . "' AND payment_type='cash_in_hand' "));
 
               $credit_sale = mysqli_fetch_array(mysqli_query($dbc, "SELECT count(*) as credit_sale,sum(grand_total) as credit_sale_amount FROM orders WHERE order_date='" . $_REQUEST['from_date'] . "' AND payment_type='credit_sale' "));
+              $supplier_due = mysqli_fetch_assoc(mysqli_query($dbc, "SELECT SUM(debit - credit) AS balance FROM transactions t JOIN customers c ON c.customer_id = t.customer_id WHERE c.customer_type = 'supplier' AND t.transaction_date = '" . $_REQUEST['from_date'] . "' "));
+              $customer_due = mysqli_fetch_assoc(mysqli_query($dbc, "SELECT SUM(credit - debit) AS balance FROM transactions t JOIN customers c ON c.customer_id = t.customer_id WHERE c.customer_type = 'customer' AND t.transaction_date = '" . $_REQUEST['from_date'] . "' "));
+              $product_stock = mysqli_fetch_assoc(mysqli_query($dbc, "SELECT SUM(quantity_instock) AS total_stock ,SUM(quantity_instock * purchase_rate) AS total_inventory_amount FROM product WHERE adddatetime = '" . $_REQUEST['from_date'] . "'"));
             } else {
 
               $sales = mysqli_fetch_array(mysqli_query($dbc, "SELECT count(*) as total_order,order_id,sum(grand_total) as total_sales FROM orders  "));
@@ -157,9 +164,12 @@
               $cash_in_hand_sale = mysqli_fetch_array(mysqli_query($dbc, "SELECT count(*) as cash_in_hand,sum(grand_total) as cash_in_hand_amount FROM orders WHERE payment_type='cash_in_hand' "));
 
               $credit_sale = mysqli_fetch_array(mysqli_query($dbc, "SELECT count(*) as credit_sale,sum(grand_total) as credit_sale_amount FROM orders WHERE payment_type='credit_sale' "));
-
+              $supplier_due = mysqli_fetch_assoc(mysqli_query($dbc, "SELECT SUM(debit-credit) AS balance FROM transactions t JOIN customers c ON c.customer_id = t.customer_id WHERE c.customer_type = 'supplier' "));
+              $customer_due = mysqli_fetch_assoc(mysqli_query($dbc, "SELECT SUM(credit - debit) AS balance FROM transactions t JOIN customers c ON c.customer_id = t.customer_id WHERE c.customer_type = 'customer'  "));
+              $product_stock = mysqli_fetch_assoc(mysqli_query($dbc, "SELECT SUM(quantity_instock) AS total_stock ,SUM(quantity_instock * purchase_rate) AS total_inventory_amount FROM product"));
+                          
               // $total_expense=!empty($expense['total_amount'])?abs($expense['total_amount']):0;
-
+            
             }
 
             $total_expense = !empty($expense['total_amount']) ? abs($expense['total_amount']) : 0;
@@ -477,7 +487,7 @@
                       </div>
                       <div class="col pr-0">
                         <p class="small text-white mb-0">Cash in Hand (no.)</p>
-                        <span class="h3 mb-0 text-white"><?= @(int)$cash_in_hand_sale['cash_in_hand'] ?></span>
+                        <span class="h3 mb-0 text-white"><?= @(int) $cash_in_hand_sale['cash_in_hand'] ?></span>
                         <!--   <span class="small text-white">+5.5%</span> -->
                       </div>
                     </div>
@@ -496,7 +506,7 @@
                       </div>
                       <div class="col pr-0">
                         <p class="small text-white mb-0">Cash in Hand (pkr)</p>
-                        <span class="h3 mb-0 text-white"><?= @(int)$cash_in_hand_sale['cash_in_hand_amount'] ?></span>
+                        <span class="h3 mb-0 text-white"><?= @(int) $cash_in_hand_sale['cash_in_hand_amount'] ?></span>
                         <!--   <span class="small text-white">+5.5%</span> -->
                       </div>
                     </div>
@@ -515,7 +525,7 @@
                       </div>
                       <div class="col pr-0">
                         <p class="small text-white mb-0">Credit Sale (no.)</p>
-                        <span class="h3 mb-0 text-white"><?= @(int)$credit_sale['credit_sale'] ?></span>
+                        <span class="h3 mb-0 text-white"><?= @(int) $credit_sale['credit_sale'] ?></span>
                         <!--   <span class="small text-white">+5.5%</span> -->
                       </div>
                     </div>
@@ -534,7 +544,7 @@
                       </div>
                       <div class="col pr-0">
                         <p class="small text-white mb-0">Credit Sale (pkr)</p>
-                        <span class="h3 mb-0 text-white"><?= @(int)$credit_sale['credit_sale_amount'] ?></span>
+                        <span class="h3 mb-0 text-white"><?= @(int) $credit_sale['credit_sale_amount'] ?></span>
                         <!--   <span class="small text-white">+5.5%</span> -->
                       </div>
                     </div>
@@ -543,6 +553,105 @@
               </div>
 
             </div> <!-- end of row -->
+
+
+            <div class="row">
+              <div class="col-md-6 col-xl-3 mb-4">
+                <div class="card shadow bg-dark text-white border-0">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-3 text-center">
+                        <span class="circle circle-sm bg-white">
+                          <i class="fe fe-16 fe-dollar-sign text-default mb-0"></i>
+                        </span>
+                      </div>
+                      <div class="col pr-0">
+                        <p class="small text-white mb-0">Supplier Due (pkr)</p>
+                        <span class="h3 mb-0 text-white">
+                          <?php
+                          echo number_format($supplier_due ['balance'] ?? 0);
+                          ?>
+                        </span>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-xl-3 mb-4">
+                <div class="card shadow bg-warning text-white border-0">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-3 text-center">
+                        <span class="circle circle-sm bg-white">
+                          <i class="fe fe-16 fe-shopping-cart text-default mb-0"></i>
+                        </span>
+                      </div>
+                      <div class="col pr-0">
+                        <p class="small text-white mb-0">Unpaid by Customers (pkr) </p>
+                        <span class="h3 mb-0 text-white">
+                          <?php
+                          echo number_format($customer_due['balance'] ?? 0);
+                          ?>
+                        </span>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!---------------------------end of box------------------------------------------------------>
+              <div class="col-md-6 col-xl-3 mb-4">
+                <div class="card shadow bg-dark text-white border-0">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-3 text-center">
+                        <span class="circle circle-sm bg-white">
+                          <i class="fe fe-16 fe-dollar-sign text-default mb-0"></i>
+                        </span>
+                      </div>
+                      <div class="col pr-0">
+                        <p class="small text-white mb-0">total remaining stock (no)</p>
+                        <span class="h3 mb-0 text-white">
+                          <?php
+                          echo number_format($product_stock['total_stock'] ?? 0);
+                          ?>
+                        </span>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!---------------------------end of box------------------------------------------------------>
+              <div class="col-md-6 col-xl-3 mb-4">
+                <div class="card shadow bg-warning text-white border-0">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-3 text-center">
+                        <span class="circle circle-sm bg-white">
+                          <i class="fe fe-16 fe-shopping-cart text-default mb-0"></i>
+                        </span>
+                      </div>
+                      <div class="col pr-0">
+                        <p class="small text-white mb-0">Remaining Stock (PKR)</p>
+                        <span class="h3 mb-0 text-white">
+                          <?php 
+                          echo number_format($product_stock['total_inventory_amount'] ?? 0 );
+                          ?>
+                        </span>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
             <hr>
             <div class="row mt-2">
               <div class="col-sm-12">
@@ -562,7 +671,7 @@
                     $c = 0;
                     while ($r = mysqli_fetch_assoc($q)):
                       $c++;
-                    ?>
+                      ?>
                       <tr>
                         <td><?= $c ?></td>
                         <td><?= $r['customer_name'] ?></td>
@@ -574,7 +683,7 @@
               </div>
             </div>
             <script>
-              $(function() {
+              $(function () {
 
 
 
@@ -606,7 +715,7 @@
 
 
 
-                  .on("change", function() {
+                  .on("change", function () {
 
 
 
@@ -619,6 +728,7 @@
 
 
                   to = $("#to").datepicker({
+
 
 
 
@@ -638,15 +748,15 @@
 
 
 
-                  .on("change", function() {
+                    .on("change", function () {
 
 
 
-                    from.datepicker("option", "maxDate", getDate(this));
+                      from.datepicker("option", "maxDate", getDate(this));
 
 
 
-                  });
+                    });
 
 
 
@@ -696,6 +806,7 @@
 
               });
             </script>
+
           </div>
         </div> <!-- .row -->
       </div> <!-- .container-fluid -->

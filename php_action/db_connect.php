@@ -7,7 +7,7 @@ $localhost = "localhost";
 $localhost = "localhost";
 $username = "root";
 $password = "";
-$dbname = "freeiuse_accounting2";
+$dbname = "lasani_bedsheet_soft";
 
 $connect = new mysqli($localhost, $username, $password, $dbname);
 $dbc =  mysqli_connect($localhost, $username, $password, $dbname);

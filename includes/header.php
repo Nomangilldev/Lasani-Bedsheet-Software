@@ -134,7 +134,7 @@
               <?php  }
             //end of fetch nav
           } else { /*user validation*/
-            $getNav = mysqli_query($dbc, "SELECT * FROM menus where parent_id=0 AND page!='dashboard.php' AND id != '101' ORDER BY sort_order ASC LIMIT 9 OFFSET 0 ");
+            $getNav = mysqli_query($dbc, "SELECT * FROM menus where parent_id=0 AND page!='dashboard.php'  ORDER BY sort_order ASC LIMIT 9 OFFSET 0 ");
             $r = 1;
             while ($fetch_nav = mysqli_fetch_assoc($getNav)) {
               $c = 0;

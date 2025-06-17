@@ -4,7 +4,7 @@
 
 if (!empty($_REQUEST['edit_purchase_id'])) {
   # code...
-  $fetchPurchase = fetchRecord($dbc, "purchase", "purchase_id", base64_decode($_REQUEST['edit_purchase_id']));
+  $fetchPurchase = fetchRecord($dbc, "purchase_return", "purchase_id", base64_decode($_REQUEST['edit_purchase_id']));
 }
 ?>
 
@@ -18,7 +18,7 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
 
           <div class="row">
             <div class="col-12 mx-auto h4">
-              <b class="text-center card-text">Purchase</b>
+              <b class="text-center card-text">Credit Purchase Return</b>
 
 
               <a href="credit_purchase.php" class="btn btn-admin float-right btn-sm">Add New</a>
@@ -30,11 +30,12 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
           <form action="php_action/custom_action.php" method="POST" id="sale_order_fm">
             <input type="hidden" name="product_purchase_id" value="<?= @empty($_REQUEST['edit_purchase_id']) ? "" : base64_decode($_REQUEST['edit_purchase_id']) ?>">
             <input type="hidden" name="payment_type" id="payment_type" value="credit_purchase">
+            <input type="hidden" name="purchase_return" id="purchase_return" value="purchase_return">
             <div class="row form-group">
               <div class="col-md-2 ml-auto">
                 <label>Purchase ID#</label>
                 <?php $result = mysqli_query($dbc, "
-    SHOW TABLE STATUS LIKE 'purchase'
+    SHOW TABLE STATUS LIKE 'purchase_return'
 ");
                 $data = mysqli_fetch_assoc($result);
                 $next_increment = $data['Auto_increment']; ?>
@@ -47,7 +48,7 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
               </div>
               <div class="col-md-2">
                 <label>Bill No</label>
-                <input type="text" name="bill_no" autocomplete="off" id="get_bill_no" value="<?= @$fetchPurchase['bill_no'] ?>" class="form-control" placeholder="Bill no">
+                <input type="text" name="bill_no" autocomplete="off" id="get_bill_no" value="<?= @$fetchPurchase['bill_no'] ?>" class="form-control" placeholder="Bill No">
               </div>
               <div class="col-sm-5">
                 <label>Select Supplier</label>
@@ -112,10 +113,11 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
                  <label>Sale Price</label>
                  <input type="number" min="0" class="form-control" placeholder="Sale Price" id="sale_product_price">
                </div> -->
-              <div class="col-6 col-sm-2 col-md-2">
-                <label>Quantity</label>
-                <input type="number" class="form-control" id="get_product_quantity" value="1" min="1" placeholder="Qty" name="quantity">
-              </div>
+               <div class="col-6 col-sm-2 col-md-2">
+                 <label>Quantity</label>
+                 <input type="number" class="form-control" placeholder="Qty" id="get_product_quantity" value="1" min="1" name="quantity" >
+
+               </div>
               <div class="col-sm-1 mr-auto">
                 <br>
                 <button type="button" class="btn btn-success btn-sm mt-2 float-right" id="addProductPurchase"><i class="fa fa-plus"></i> <b>Add</b></button>
@@ -139,7 +141,7 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
                   </thead>
                   <tbody class="table table-bordered" id="purchase_product_tb">
                     <?php if (isset($_REQUEST['edit_purchase_id'])):
-                      $q = mysqli_query($dbc, "SELECT  product.*,brands.*,purchase_item.* FROM purchase_item INNER JOIN product ON product.product_id=purchase_item.product_id INNER JOIN brands ON product.brand_id=brands.brand_id   WHERE purchase_item.purchase_id='" . base64_decode($_REQUEST['edit_purchase_id']) . "'");
+                      $q = mysqli_query($dbc, "SELECT  product.*,brands.*,purchase_return_item.* FROM purchase_return_item INNER JOIN product ON product.product_id=purchase_return_item.product_id INNER JOIN brands ON product.brand_id=brands.brand_id   WHERE purchase_return_item.purchase_id='" . base64_decode($_REQUEST['edit_purchase_id']) . "'");
 
                       while ($r = mysqli_fetch_assoc($q)) {
 
@@ -149,7 +151,7 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
                           <input type="hidden" id="product_quantites_<?= $r['product_id'] ?>" name="product_quantites[]" value="<?= $r['quantity'] ?>">
                           <input type="hidden" id="product_rate_<?= $r['product_id'] ?>" name="product_rates[]" value="<?= $r['rate'] ?>">
                           <input type="hidden" id="product_totalrate_<?= $r['product_id'] ?>" name="product_totalrates[]" value="<?= $r['rate'] ?>">
-                          <input type="hidden" id="product_salerate_<?= $r['product_id'] ?>" name="product_salerates[]" value="<?= $r['sale_rate'] ?>">
+                               <input type="hidden" id="product_salerate_<?= $r['product_id'] ?>" name="product_salerates[]" value="<?= $r['sale_rate'] ?>">
                           <td><?= $r['product_code'] ?></td>
                           <td><?= $r['product_name'] ?></td>
                           <td><?= $r['rate'] ?></td>
@@ -160,7 +162,7 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
                           <td>
 
                             <button type="button" onclick="removeByid(`#product_idN_<?= $r['product_id'] ?>`)" class="fa fa-trash text-danger" href="#"></button>
-                            <button type="button" onclick="editByid(<?= $r['product_id'] ?>,`<?= $r['product_code'] ?>`,<?= $r['rate'] ?>,<?= $r['quantity'] ?>)" class="fa fa-edit text-success ml-2 "></button>
+                            <button type="button" onclick="editByid(<?= $r['product_id'] ?>,`<?= $r['product_code'] ?>`,<?= $r['rate'] ?>,<?= $r['quantity'] ?>,<?= $r['sale_rate'] ?>)" class="fa fa-edit text-success ml-2 "></button>
 
                           </td>
                         </tr>

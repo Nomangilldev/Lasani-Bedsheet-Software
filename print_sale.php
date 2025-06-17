@@ -82,7 +82,8 @@
                 $order_type = "cash purchase";
             }
             $order_item = mysqli_query($dbc, "SELECT purchase_item.*,product.* FROM purchase_item INNER JOIN product ON purchase_item.product_id=product.product_id WHERE purchase_item.purchase_id='" . $_REQUEST['id'] . "'");
-        } else {
+        } 
+        else {
             $nameSHow = 'Customer';
             $order = fetchRecord($dbc, "orders", "order_id", $_REQUEST['id']);
             $getDate = $order['order_date'];
@@ -156,7 +157,7 @@
                     <h4 class="text-center p-0 m-0"><?= @$order_type ?></h4>
                 </div>
                 <div class="  col-sm-4 ">
-                    <p class="h4 border border-bottom-0 text-center p-0 m-0 font-weight-bold"> <?= $nameSHow ?> Address </p>
+                    <p class="h4 border border-bottom-0 text-center p-0 m-0 font-weight-bold"> <?= $nameSHow ?> Phone </p>
                     <p class="h4 border p-0 m-0 font-weight-bold text-center"><b><?= $order['client_contact'] ?></b></p>
                 </div>
 

@@ -31,7 +31,7 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
             <input type="hidden" name="product_purchase_id" value="<?= @empty($_REQUEST['edit_purchase_id']) ? "" : base64_decode($_REQUEST['edit_purchase_id']) ?>">
             <input type="hidden" name="payment_type" id="payment_type" value="cash_purchase">
             <div class="row form-group">
-              <div class="col-md-1 ml-auto">
+              <div class="col-md-2 ml-auto">
                 <label for="next_increment">Purchase ID#</label>
                 <?php $result = mysqli_query($dbc, "SHOW TABLE STATUS LIKE 'purchase'");
                 $data = mysqli_fetch_assoc($result);
@@ -48,13 +48,13 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
                   readonly class="form-control" placeholder="YYYY-MM-DD">
               </div>
 
-              <div class="col-md-1">
+              <div class="col-md-2">
                 <label for="get_bill_no">Bill No</label>
                 <input type="text" name="bill_no" autocomplete="off" id="get_bill_no"
                   value="<?= @$fetchPurchase['bill_no'] ?>" class="form-control" placeholder="Bill No">
               </div>
 
-              <div class="col-sm-3">
+              <div class="col-sm-5">
                 <label for="credit_order_client_name">Select Supplier</label>
                 <div class="input-group">
                   <select class="form-control" name="cash_purchase_supplier" id="credit_order_client_name" required
@@ -84,13 +84,13 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
             </div>
 
             <div class="form-group row">
-              <div class="col-4 col-md-1 ml-auto">
-                <label for="get_product_code">Product Code</label>
+              <div class="col-4 col-sm-2 col-md-2 ml-auto">
+                <label for="get_product_code ">Product Code</label>
                 <input type="text" name="product_code" autocomplete="off" id="get_product_code" class="form-control"
                   placeholder="Code">
               </div>
 
-              <div class="col-6 col-md-2">
+              <div class="col-6 col-sm-2 col-md-4">
                 <label for="get_product_name">Products</label>
                 <input type="hidden" id="add_pro_type" value="add">
                 <select class="form-control searchableSelect" id="get_product_name" name="product_id">
@@ -118,10 +118,13 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
               </div>
 
               <div class="col-6 col-sm-2 col-md-2">
-                <label for="get_product_price">Price/piece</label>
-                <input type="number" min="0" <?= ($_SESSION['user_role'] == "admin") ? "" : "readonly" ?>
-                  class="form-control" id="get_product_price" placeholder="Price">
-              </div>
+                 <label>Purchase Price</label>
+                 <input type="number" min="0" class="form-control" placeholder="Purchase Price" id="get_product_price">
+               </div>
+               <!-- <div class="col-6 col-sm-2 col-md-2">
+                 <label>Sale Price</label>
+                 <input type="number" min="0" class="form-control" placeholder="Sale Price" id="sale_product_price">
+               </div> -->
 
               <div class="col-6 col-sm-2 col-md-2">
                 <label for="get_product_quantity">Quantity</label>
@@ -145,7 +148,8 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
                     <tr>
                       <th>Code</th>
                       <th>Product Name</th>
-                      <th>Unit Price</th>
+                      <th>Purchase Price</th>
+                      <!-- <th>Sale Price</th> -->
                       <th>Quantity</th>
                       <th>Total Price</th>
                       <th>Action</th>
@@ -163,10 +167,11 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
                           <input type="hidden" id="product_quantites_<?= $r['product_id'] ?>" name="product_quantites[]" value="<?= $r['quantity'] ?>">
                           <input type="hidden" id="product_rate_<?= $r['product_id'] ?>" name="product_rates[]" value="<?= $r['rate'] ?>">
                           <input type="hidden" id="product_totalrate_<?= $r['product_id'] ?>" name="product_totalrates[]" value="<?= $r['rate'] ?>">
-                          <!-- <input type="hidden" id="product_salerate_<?= $r['product_id'] ?>" name="product_salerates[]" value="<?= $r['sale_rate'] ?>"> -->
+                          <input type="hidden" id="product_salerate_<?= $r['product_id'] ?>" name="product_salerates[]" value="<?= $r['sale_rate'] ?>">
                           <td><?= $r['product_code'] ?></td>
                           <td><?= $r['product_name'] ?></td>
                           <td><?= $r['rate'] ?></td>
+                          <!-- <td><?= $r['sale_rate'] ?></td> -->
                           <td><?= $r['quantity'] ?></td>
                           <td><?= (float)$r['rate'] * (float)$r['quantity'] ?></?>
                           </td>
@@ -183,7 +188,7 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
 
                   <tfoot>
                     <tr>
-                      <td colspan="4"></td>
+                      <td colspan="3"></td>
 
                       <td class="table-bordered"> Sub Total :</td>
                       <td class="table-bordered" id="product_total_amount"><?= @$fetchPurchase['total_amount'] ?></td>
@@ -192,7 +197,7 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
                       </td>
                     </tr>
                     <tr>
-                      <td colspan="4" class="border-none"></td>
+                      <td colspan="3" class="border-none"></td>
                       <td class="table-bordered"> <strong>Grand Total :</strong> </td>
                       <td class="table-bordered" id="product_grand_total_amount"><?= @$fetchPurchase['grand_total'] ?></td>
                       <td class="table-bordered">Paid :</td>
@@ -201,7 +206,7 @@ if (!empty($_REQUEST['edit_purchase_id'])) {
                       </td>
                     </tr>
                     <tr>
-                      <td colspan="4" class="border-none"></td>
+                      <td colspan="3" class="border-none"></td>
                       <td class="table-bordered">Remaing Amount :</td>
                       <td class="table-bordered"><input type="number" class="form-control form-control-sm" id="remaining_ammount" readonly name="remaining_ammount" value="<?= @$fetchPurchase['due'] ?>">
                       </td>

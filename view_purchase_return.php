@@ -12,7 +12,7 @@
 
             <div class="row">
               <div class="col-12 mx-auto h4">
-                <b class="text-center card-text">Purchase List</b>
+                <b class="text-center card-text">Purchase Rerurn List</b>
 
 
               </div>
@@ -34,7 +34,7 @@
                 </tr>
               </thead>
               <tbody>
-                <?php $q = mysqli_query($dbc, "SELECT * FROM purchase ");
+                <?php $q = mysqli_query($dbc, "SELECT * FROM purchase_return ");
                 $c = 0;
                 while ($r = mysqli_fetch_assoc($q)) {
                   $c++;
@@ -53,7 +53,7 @@
 
                     <td class="d-flex">
                       <?php if (@$userPrivileges['nav_edit'] == 1 || $fetchedUserRole == "admin" and $r['payment_type'] == "cash_purchase"): ?>
-                        <form action="cash_purchase.php" method="POST">
+                        <form action="cash_purchase_return.php" method="POST">
                           <input type="hidden" name="edit_purchase_id" value="<?= base64_encode($r['purchase_id']) ?>">
                           <button type="submit" class="btn btn-admin btn-sm m-1">Edit</button>
                         </form>
@@ -61,7 +61,7 @@
 
                       <?php endif; ?>
                       <?php if (@$userPrivileges['nav_edit'] == 1 || $fetchedUserRole == "admin" and $r['payment_type'] == "credit_purchase"): ?>
-                        <form action="credit_purchase.php" method="POST">
+                        <form action="credit_purchase_return.php" method="POST">
                           <input type="hidden" name="edit_purchase_id" value="<?= base64_encode($r['purchase_id']) ?>">
                           <button type="submit" class="btn btn-admin btn-sm m-1">Edit</button>
                         </form>
@@ -69,13 +69,13 @@
 
                       <?php endif; ?>
                       <?php if (@$userPrivileges['nav_delete'] == 1 || $fetchedUserRole == "admin"): ?>
-                        <a href="#" onclick="deleteAlert('<?= $r['purchase_id'] ?>','purchase','purchase_id','view_purchase_tb')" class="btn btn-danger btn-sm m-1">Delete</a>
+                        <a href="#" onclick="deleteAlert('<?= $r['purchase_id'] ?>','purchase_return','purchase_id','view_purchase_tb')" class="btn btn-danger btn-sm m-1">Delete</a>
 
 
                       <?php endif; ?>
 
 
-                      <a target="_blank" href="<?= $get_company['print_url'] ?>?id=<?= $r['purchase_id'] ?>&type=purchase" class="btn btn-admin2 btn-sm m-1">Print</a>
+                      <a target="_blank" href="<?= $get_company['print_url'] ?>?id=<?= $r['purchase_id'] ?>&type=purchase_return" class="btn btn-admin2 btn-sm m-1">Print</a>
                     </td>
                   </tr>
                 <?php  } ?>
