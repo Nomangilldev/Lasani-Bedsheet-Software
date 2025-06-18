@@ -335,6 +335,7 @@ if (!empty($_REQUEST['action']) and $_REQUEST['action'] == "product_module") {
 				"sts" => "error"
 			]);
 			exit;
+			
 		}
 	}
 
