@@ -304,8 +304,7 @@ if (isset($_REQUEST['new_sin_voucher_date'])) {
 					'transaction_remarks' => @$_REQUEST['voucher_hint'],
 					'transaction_date' => @$_REQUEST['new_sin_voucher_date'],
 				];
-				update_data($dbc, "transactions", $credit, "transaction_id", $transactions['transaction_id1']);
-				;
+				update_data($dbc, "transactions", $credit, "transaction_id", $transactions['transaction_id1']);;
 			}
 
 
@@ -369,6 +368,7 @@ if (!empty($_REQUEST['action']) and $_REQUEST['action'] == "product_module") {
 		't_days' => @$_REQUEST['t_days'],
 		'f_days' => @$_REQUEST['f_days'],
 		'alert_at' => @$_REQUEST['alert_at'],
+		'quantity_instock' => @$_REQUEST['quantity_instock'],
 		'availability' => @$_REQUEST['availability'],
 		'actual_rate' => @$_REQUEST['actual_rate'],
 		'purchase_rate' => @$_REQUEST['purchase_rate'],
@@ -1124,7 +1124,7 @@ if (isset($_REQUEST['cash_purchase_supplier']) && empty($_REQUEST['purchase_retu
 					// $product_salerates = (float)$_REQUEST['product_salerates'][$x];
 					$total = $product_quantites * $product_rates;
 					$total_ammount += (float) $total;
-							$updateProduct = mysqli_query($dbc, "
+					$updateProduct = mysqli_query($dbc, "
         UPDATE product 
         SET  
             purchase_rate = '$product_rates' 
@@ -2041,4 +2041,3 @@ if (isset($_REQUEST['cash_purchase_supplier']) && isset($_REQUEST['purchase_retu
 		'print_url' => $get_company['print_url']
 	]);
 }
-

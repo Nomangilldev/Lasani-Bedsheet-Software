@@ -109,10 +109,13 @@ $btn_name = isset($_REQUEST['edit_product_id']) ? "Update" : "Add";
                     <label for="">Product Alert on Quantity</label>
                     <input type="text" required class="form-control" value="<?= (empty($fetchproduct)) ? 5 : $fetchproduct['alert_at'] ?>" id="alert_at" placeholder="Product Stock Alert" name="alert_at">
                   </div>
+                  <div class="col-sm-3 mt-3">
+                    <label for="">Product InStock Quantity</label>
+                    <input type="text" required class="form-control" value="<?= (empty($fetchproduct)) ? 0 : $fetchproduct['quantity_instock'] ?>" id="quantity_instock" placeholder="Product Quantity" name="quantity_instock">
+                  </div>
                   <div class="col-sm-3 mt-3 mb-sm-0">
                     <label for="">Product Description</label>
-
-                    <textarea class="form-control" name="product_description" placeholder="Product Description"><?= @$fetchproduct['product_description'] ?></textarea>
+                    <textarea rows="1" class="form-control" name="product_description" placeholder="Product Description"><?= @$fetchproduct['product_description'] ?></textarea>
                   </div>
                   <div class="col-sm-3 mt-3 mb-sm-0">
 
